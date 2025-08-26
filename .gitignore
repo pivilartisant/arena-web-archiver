@@ -14,3 +14,5 @@ wheels/
 *.txt
 tmp/*
 api.are.na
+
+.DS_Store

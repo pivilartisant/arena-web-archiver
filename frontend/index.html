@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Are.na Archiver</title>
+    <link rel="stylesheet" href="/static/styles/style.css">
+  </head>
+<body>
+<form 
+    id="archive-form"
+    hx-post="/archive/"
+    hx-target="#response"
+    hx-indicator=".htmx-indicator"
+    hx-on::after-request="if(event.detail.successful) this.reset()"
+    hx-on::before-request="document.getElementById('response').innerHTML = ''"
+>
+  <input type="text" name="block_url" placeholder="Are.na block url"/>
+  <input type="text" name="warc_file_name" placeholder="Warc filename"/>
+  
+  <input type="radio" name="archive_method" value="mirror"> Mirror
+  <input type="radio" name="archive_method" value="snapshot" checked> Snapshot
+
+  <button 
+    type="submit"
+  >
+    Archive
+  </button>
+</form>
+<img class="htmx-indicator" src="/static/assets/loader.gif">
+
+<div id="response">
+</div>
+
+<footer>
+  <ul>
+    <li>
+      Docs
+    </li>
+    <li>
+      Github
+    </li>
+    <li>
+      Phoebe249
+    </li>
+  </ul>
+</footer>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js"></script>
+</html>
