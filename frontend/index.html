@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width" />
     <title>Are.na Archiver</title>
     <link rel="stylesheet" href="/static/styles/style.css">
+    <link rel="icon" type="image/x-icon" href="/static/assets/favicon.gif">
   </head>
 <body>
   <fieldset>
-    <legend>Are.na Web Archiver</legend>
+    <legend>Are.na Selfhosted Web Archiver</legend>
 <form 
     id="archive-form"
     hx-post="/archive/"
@@ -16,15 +17,14 @@
     hx-indicator=".htmx-indicator"
     hx-on::after-request="if(event.detail.successful) this.reset()"
     hx-on::before-request="document.getElementById('response').innerHTML = ''"
-    hx-on::before-request="document.getElementById('serious-errors').innerHTML = ''"
-    hx-on::before-request="document.getElementById('not-found').innerHTML = ''"
+
     hx-on:htmx:response-error="
-        if(event.detail.xhr.status === 404){
-            document.getElementById('not-found').innerText = 'Block not found.';
+        if(event.detail.xhr.status === 403){
+            document.getElementById('response').innerText = 'Forbidden URL (requested website is blocking the archival process)';
         } else if(event.detail.xhr.status === 501){
-            document.getElementById('serious-errors').innerText = 'ERROR: Invalid URL';
+            document.getElementById('response').innerText = 'ERROR: Invalid URL';
         } else {
-           document.getElementById('serious-errors').innerText = 'Internal Server Error';
+           document.getElementById('response').innerText = 'Internal Server Error';
         }
     "
 
@@ -44,11 +44,13 @@
 
 </fieldset>
 <img class="htmx-indicator" src="/static/assets/loader.gif">
-
+<fieldset>
+  <legend>Archive Status</legend>
 <div id="response">
+  N/A
 </div>
-<div id="serious-errors"></div>
-<div id="not-found"></div>
+</fieldset>
+<hr>
 <footer>
   <ul>
     <li>
@@ -61,5 +63,16 @@
 </footer>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js"></script>
-<script>console.log("Made wih <3 by https://github.com/pivilartisant")</script>
+<script>
+console.log("Made wih <3 by https://github.com/pivilartisant")
+document.body.addEventListener('htmx:afterRequest', (evt) => {
+        const detail = evt.detail.xhr.response;
+        try {
+            const data = JSON.parse(detail);
+            if (data.html) {
+                document.getElementById('response').innerHTML = data.html;
+            }
+        } catch {}
+    });
+</script>
 </html>

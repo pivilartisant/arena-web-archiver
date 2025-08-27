@@ -19,10 +19,9 @@ class Archive_Repsonse(BaseModel):
    archive_method:Literal["snapshot", "mirror"]
    warc_file_name:str
    status:str
+   html: str 
 
 
-
-# Root route
 @app.get("/")
 async def root():
     return responses.FileResponse(os.path.join("frontend", "index.html"))
@@ -34,7 +33,7 @@ async def archive_website_from_arena_block(
     block_url: Optional[str] = Query(None),
     archive_method: Literal["snapshot", "mirror"] = Query("snapshot"),
     warc_file_name: str = Query("")
-    ):
+    ) -> Archive_Repsonse:
 
     request_method = request.method
 
@@ -62,59 +61,49 @@ async def archive_website_from_arena_block(
     if r.status_code != requests.codes.ok and not item_url:
         raise HTTPException(status_code=501, detail="Invalid URL")
 
-       
 
-    # hanlde parsing logic
+    # handle parsing logic
     if archive_method == "snapshot":
         process = snapshot_url(item_url, warc_file_name)
+        print(process.returncode)
         if process.returncode != 0:
-            return handle_archive_error(request_method,block_url,item_url, archive_method, warc_file_name)
+            raise HTTPException(status_code=403, detail="Forbidden URL")
         else:
-            return handle_archive_reponse(request_method,block_url,item_url, archive_method, warc_file_name)
+            return handle_archive_response(block_url,item_url, archive_method, warc_file_name)
     elif archive_method == "mirror":
         process = mirror_url(item_url, warc_file_name)
         if process.returncode != 0:
-            return handle_archive_error(request_method,block_url,item_url, archive_method, warc_file_name)
+            raise HTTPException(status_code=403, detail="Forbidden URL")
         else:
-            return handle_archive_reponse(request_method,block_url,item_url, archive_method, warc_file_name)
+            return handle_archive_response(block_url,item_url, archive_method, warc_file_name)
     else:
         raise HTTPException(status_code=403, detail="Archiving method not found")
     
 
-def handle_archive_reponse(method: Literal["POST", "GET"],block_url:str,item_url:str, archive_method:Literal["snapshot", "mirror"],warc_file_name:str,):
-    if method == "POST":
-         return  responses.HTMLResponse(
-            f"""
-            <div>
-                Successfully archived {item_url}
-            </div>
-            """
-        )
-    else:
-        return responses.JSONResponse(Archive_Repsonse(
-            block_url=block_url,
-            archive_method=archive_method,
-            warc_file_name=warc_file_name,
-            status="archived"
-        ).model_dump())
+def handle_archive_response(
+    block_url: str,
+    item_url: str,
+    archive_method: Literal["snapshot", "mirror"],
+    warc_file_name: str,
+):
+    html_content = f"""
+    <div>
+        Successfully archived: 
+        <br>
+        <strong>{item_url}</strong>
+    </div>
+    """
 
+    response = Archive_Repsonse(
+        block_url=block_url,
+        archive_method=archive_method,
+        warc_file_name=warc_file_name,
+        status="archived",
+        html=html_content
+    )
 
-def handle_archive_error(method: Literal["POST", "GET"],block_url:str,item_url:str, archive_method:Literal["snapshot", "mirror"],warc_file_name:str,):
-    if method == "POST":
-         return  responses.HTMLResponse(
-            f"""
-            <div>
-                Error Archiving {item_url}
-            </div>
-            """
-        )
-    else:
-        return responses.JSONResponse(Archive_Repsonse(
-            block_url=block_url,
-            archive_method=archive_method,
-            warc_file_name=warc_file_name,
-            status="error"
-        ).model_dump())
+    return responses.JSONResponse(response.model_dump()) 
+
 
 
 # functions
@@ -145,7 +134,7 @@ def mirror_url(url: str, warc_file_name: str):
         f"--directory-prefix=./tmp/mirror/{warc_file_name}",
         url
     ]
-    return subprocess.run(cmd, check=False)
+    return subprocess.run(cmd, check=False) # disabling check to capture error in endpoint logic
 
 
 def snapshot_url(url: str, warc_file_name: str):

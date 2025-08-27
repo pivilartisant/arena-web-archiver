@@ -43,6 +43,15 @@ input {
     border-left: none;
     border-right: none;
 }
+
+hr {
+    color: blue;
+}
+
+input[type="radio"] {
+    accent-color: blue; 
+}
+
 body {
     height: 100%;
     background-color: #fdfffc;
