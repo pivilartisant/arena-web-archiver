@@ -7,3 +7,58 @@
 .htmx-request.htmx-indicator{
     display:inline;
 }
+
+form {
+  display: flex;
+  align-items: center;  
+  gap: 1em;
+  padding: 0.2em;
+}
+
+
+form button {
+  border-color: blue;
+  background-color: transparent;
+  font-weight: 400;
+  color:blue;
+  padding:0em 1em 0em 1em;
+}
+
+fieldset {
+    border-color: blue;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+}
+
+input {
+    padding: 0em;
+    margin: 0em;
+    border-color: blue;
+    border-width: 1px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+body {
+    height: 100%;
+    background-color: #fdfffc;
+    color: blue;
+    font-family:'Courier New', Courier, monospace;
+}
+
+footer{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+footer ul{
+    display: flex;
+    gap: 1em;
+    list-style-type: none;
+}

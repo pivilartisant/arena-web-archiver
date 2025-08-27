@@ -52,25 +52,27 @@ async def archive_website_from_arena_block(
     # parse the url
     req_url, warc_file_name = parse_arena_url(block_url, warc_file_name)
 
-    # assert request is okay
+   
     r = requests.get(req_url, headers=headers)
-    item_url = r.json().get('source').get('url')
-    if r.status_code == requests.codes.ok:
-        print("Reponse OK :3")
-    else:
-        r.raise_for_status()
+    data = r.json()
+    source = data.get('source')
+    item_url = source.get('url') if source else None
+    print(item_url)
+
+    if r.status_code != requests.codes.ok and not item_url:
+        raise HTTPException(status_code=501, detail="Invalid URL")
+
+       
 
     # hanlde parsing logic
     if archive_method == "snapshot":
         process = snapshot_url(item_url, warc_file_name)
-        
         if process.returncode != 0:
             return handle_archive_error(request_method,block_url,item_url, archive_method, warc_file_name)
         else:
             return handle_archive_reponse(request_method,block_url,item_url, archive_method, warc_file_name)
     elif archive_method == "mirror":
         process = mirror_url(item_url, warc_file_name)
-        
         if process.returncode != 0:
             return handle_archive_error(request_method,block_url,item_url, archive_method, warc_file_name)
         else:
