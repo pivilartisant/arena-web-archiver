@@ -1,27 +1,30 @@
 # arena-web-archiver
 
-This minimal and selfhosted utiliy for Are.na is built with <a href="https://htmx.org/">HTMX</a>, <a href="https://fastapi.tiangolo.com/">FastAPI</a> and <a href="https://www.gnu.org/software/wget/">WGET</a>.
+A minimal, self-hosted utility for [Are.na](https://www.are.na/) built with [HTMX](https://htmx.org/), [FastAPI](https://fastapi.tiangolo.com/), and [Wget](https://www.gnu.org/software/wget/).
 
-<div>
-Some Details:
-</div>
-<ul>
-<li>Website archived will be save as HTML and WARC files.</li>
-<li>If no WARC filename is given are.na block id will be used.</li>
-<li>Archives are saved in the **/tmp/arena_archives** directory on your filesystem when using docker. If not, they'll be savec in the **/tmp** directory directly in the project repo.</li>
-<li><em>Mirror</em> makes a 1:1 copy of the website. <em>Snapshot</em> only archives a single page.</li>
-</ul>
+---
 
-<div>
-  Recommendations:
-</div>
-<ul>
-  <li>Use this tool to save oldweb things that may disapear one day.</li>
-  <li>It's not super complex or anything, so expect the bare minimum.</li>
-  <li>While mirroring some website will create an infinte loop, this error is not handled.</li>
-  <li>For large websites and archives, it's probably better to not use this tool.</li>
-</ul>
-<div>
+## Details
+
+- Websites are archived as **HTML** and **WARC** files.  
+- If no WARC filename is provided, the Are.na block ID will be used.  
+- Archives are saved in:
+  - **`/tmp/arena_archives`** when running with Docker.  
+  - **`/tmp`** (inside the project repository) when running locally.  
+- **Mirror** → creates a 1:1 copy of the entire website.  
+- **Snapshot** → archives only a single page.  
+
+---
+
+## Recommendations
+
+- Use this tool to preserve old web content that might disappear one day.  
+- It’s intentionally minimal—expect the bare essentials.  
+- Some sites may cause infinite loops when mirroring (this error is not currently handled).  
+- For very large websites and archives, consider using a more robust archiving tool.  
+
+---
+
 
 
 ## Get Started
