@@ -7,7 +7,7 @@
 6) Access on http://127.0.0.1:8000
 7) See docs at http://127.0.0.1:8000/docs
 
-## with docker (don't use it yet)
+## with docker
 1) run ```make docker-create-volume``` 
 2) run ```make docker-build```
 3) run ```make docker-run```
