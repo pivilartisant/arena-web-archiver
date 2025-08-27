@@ -25,11 +25,6 @@ class Archive_Repsonse(BaseModel):
 # Root route
 @app.get("/")
 async def root():
-    return {"hello":"world"}
-
-# Root route
-@app.get("/client")
-async def root():
     return responses.FileResponse(os.path.join("frontend", "index.html"))
 
 
@@ -68,12 +63,18 @@ async def archive_website_from_arena_block(
     # hanlde parsing logic
     if archive_method == "snapshot":
         process = snapshot_url(item_url, warc_file_name)
-        process.check_returncode()
-        return handle_archive_reponse(request_method,block_url,item_url, archive_method, warc_file_name)
+        
+        if process.returncode != 0:
+            return handle_archive_error(request_method,block_url,item_url, archive_method, warc_file_name)
+        else:
+            return handle_archive_reponse(request_method,block_url,item_url, archive_method, warc_file_name)
     elif archive_method == "mirror":
         process = mirror_url(item_url, warc_file_name)
-        process.check_returncode()
-        return handle_archive_reponse(request_method,block_url,item_url, archive_method, warc_file_name)
+        
+        if process.returncode != 0:
+            return handle_archive_error(request_method,block_url,item_url, archive_method, warc_file_name)
+        else:
+            return handle_archive_reponse(request_method,block_url,item_url, archive_method, warc_file_name)
     else:
         raise HTTPException(status_code=403, detail="Archiving method not found")
     
@@ -94,6 +95,25 @@ def handle_archive_reponse(method: Literal["POST", "GET"],block_url:str,item_url
             warc_file_name=warc_file_name,
             status="archived"
         ).model_dump())
+
+
+def handle_archive_error(method: Literal["POST", "GET"],block_url:str,item_url:str, archive_method:Literal["snapshot", "mirror"],warc_file_name:str,):
+    if method == "POST":
+         return  responses.HTMLResponse(
+            f"""
+            <div>
+                Error Archiving {item_url}
+            </div>
+            """
+        )
+    else:
+        return responses.JSONResponse(Archive_Repsonse(
+            block_url=block_url,
+            archive_method=archive_method,
+            warc_file_name=warc_file_name,
+            status="error"
+        ).model_dump())
+
 
 # functions
 def parse_arena_url(block_url:str, warc_file_name:str):
@@ -123,15 +143,15 @@ def mirror_url(url: str, warc_file_name: str):
         f"--directory-prefix=./tmp/mirror/{warc_file_name}",
         url
     ]
-    return subprocess.run(cmd, check=True)
+    return subprocess.run(cmd, check=False)
 
 
 def snapshot_url(url: str, warc_file_name: str):
     cmd = [
         "wget",
         # "--limit-rate=1m"
-        # "--no-check-certificate"
+        #"--no-check-certificate"
         f"--directory-prefix=./tmp/snapshot/{warc_file_name}",
         url
     ]
-    return subprocess.run(cmd, check=True)
+    return subprocess.run(cmd, check=False)
