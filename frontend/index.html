@@ -30,7 +30,7 @@
 
 >
 <div>></div>
-  <input  type="text" name="block_url" placeholder="Are.na block url"/>
+  <input  type="text" name="block_url" placeholder="Are.na block url" required/>
   <input  type="text" name="warc_file_name" placeholder="Warc filename"/>
   <input class="radio-option"  type="radio" name="archive_method" value="mirror"> Mirror
   <input class="radio-option" type="radio" name="archive_method" value="snapshot" checked> Snapshot
@@ -51,10 +51,51 @@
 </div>
 </fieldset>
 <hr>
+<div>
+  Welcome to the Are.na Web Archiver.
+</div>
+<br>
+<div>
+  This minimal and selfhosted utiliy for Are.na is built with <a href="https://htmx.org/">HTMX</a>, <a href="https://fastapi.tiangolo.com/">FastAPI</a> and <a href="https://www.gnu.org/software/wget/">WGET</a>.
+</div>
+<br>
+<div>
+  Getting started: 
+</div>
+Save a block to Are.na -> visit this site or use the API to archive a block. See api specs <a href="/docs">here</a>.
+<div>
+  <br>
+<div>
+Some Details:
+</div>
+<ul>
+<li>Website archived will be save as HTML and WARC files.</li>
+<li>If no WARC filename is given are.na block id will be used.</li>
+<li>Archive are saved in the /tmp directory in the project (not the global /tmp in your filesystem).</li>
+<li><em>Mirror</em> makes a 1:1 copy of the website. <em>Snapshot</em> only archives a single page.</li>
+</ul>
+
+<div>
+  Recommendations:
+</div>
+<ul>
+  <li>Use this tool to save oldweb things that may disapear one day.</li>
+  <li>It's not super complex or anything, so expect the bare minimum.</li>
+  <li>While mirroring some website will create an infinte loop, this error is not handled.</li>
+  <li>For large websites and archives, it's probably better to not use this tool.</li>
+</ul>
+<div>
+That's all folks, peace out!
+</div>
+</div>
+
+
+
+</div>
 <footer>
   <ul>
     <li>
-     <a href="/docs" target="_blank">Docs</a>
+     <a href="/docs" target="_blank">API</a>
     </li>
     <li>
      <a href="https://github.com/pivilartisant/arena-web-archiver" target="_blank">Github</a>
