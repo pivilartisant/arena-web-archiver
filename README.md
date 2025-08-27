@@ -8,10 +8,11 @@
 7) See docs at http://127.0.0.1:8000/docs
 
 ## with docker (don't use it yet)
-1) run ```make docker-build```
-2) run ```make docker-run```
-3) Access on http://127.0.0.1:8000
-4) See docs at http://127.0.0.1:8000/docs
+1) run ```make docker-create-volume``` 
+2) run ```make docker-build```
+3) run ```make docker-run```
+4) Access on http://127.0.0.1:8000
+5) See docs at http://127.0.0.1:8000/docs
 
 ### contribute
 See https://github.com/pivilartisant/arena-web-archiver/issues 
@@ -24,7 +25,7 @@ Some Details:
 <ul>
 <li>Website archived will be save as HTML and WARC files.</li>
 <li>If no WARC filename is given are.na block id will be used.</li>
-<li>Archive are saved in the /tmp directory in the project (not the global /tmp in your filesystem).</li>
+<li>Archives are saved in the **/tmp/arena_archives** directory on your filesystem when using docker. If not, they'll be savec in the **/tmp** directory directly in the project repo.</li>
 <li><em>Mirror</em> makes a 1:1 copy of the website. <em>Snapshot</em> only archives a single page.</li>
 </ul>
 
