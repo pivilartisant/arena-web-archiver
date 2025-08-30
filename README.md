@@ -1,4 +1,4 @@
-# arena-web-archiver
+# Are.na Web Archiver
 
 A minimal, self-hosted utility for [Are.na](https://www.are.na/) built with [HTMX](https://htmx.org/), [FastAPI](https://fastapi.tiangolo.com/), and [Wget](https://www.gnu.org/software/wget/).
 
